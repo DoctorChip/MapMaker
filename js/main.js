@@ -24,6 +24,10 @@ window.addEventListener('resize', function() {
     drawMap();
 });
 
+window.addEventListener('mouseout', function() {
+    disableTools();
+});
+
 function drawMap() {
 
     clearCanvas();
@@ -69,13 +73,19 @@ function clearCanvas() {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 }
 
+function disableTools() {
+    if (globalConfig.tools.drag.enabled) toggleDrag();
+}
+
 function toggleDrag() {
+    var canvas = getCtx().canvas;
     globalConfig.tools.drag.enabled = !globalConfig.tools.drag.enabled;
     if (globalConfig.tools.drag.enabled) {
         ctx.canvas.onmousedown = dragCanvasHandler;
         ctx.canvas.onmouseup = dragEndCanvasHandler;
     }
     else {
+        canvas.onmousemove = null;
         ctx.canvas.onmousedown = null;
         ctx.canvas.onmouseup = null;
     }
@@ -129,4 +139,18 @@ function dragHandlerMoveCanvas(e) {
 
 function hasClass(element, cls) {
     return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
+}
+
+/////////////////
+// Keybindings //
+/////////////////
+
+window.onkeyup = function(e) {
+    var key = e.keyCode;
+    switch (key) {
+        // M
+        case 77: {
+            toggleDrag();
+        }
+    }
 }
