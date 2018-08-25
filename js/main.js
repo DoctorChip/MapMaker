@@ -4,7 +4,9 @@ var globalConfig = {
     zoom_step: 1.2,
     tools: {
         drag: {
-            enabled : false
+            enabled : false,
+            xInit: 0,
+            yInit: 0
         }
     }
 };
@@ -106,6 +108,10 @@ function zoomFullHandler(event) {
 
 function dragCanvasHandler(e) {
     var canvas = getCtx().canvas;
+
+    globalConfig.tools.drag.xInit = e.clientX - globalConfig.map_pos_x;
+    globalConfig.tools.drag.yInit = e.clientY - globalConfig.map_pos_y;
+
     canvas.onmousemove = dragHandlerMoveCanvas;
 }
 
@@ -116,8 +122,8 @@ function dragEndCanvasHandler() {
 
 function dragHandlerMoveCanvas(e) {
     var ctx = getCtx();
-    globalConfig.map_pos_x = e.pageX - ctx.canvas.offsetLeft;
-    globalConfig.map_pos_y = e.pageY - ctx.canvas.offsetTop;
+    globalConfig.map_pos_x = e.pageX - globalConfig.tools.drag.xInit - ctx.canvas.offsetLeft;
+    globalConfig.map_pos_y = e.pageY - globalConfig.tools.drag.yInit - ctx.canvas.offsetTop;
     drawMap();
 }
 
