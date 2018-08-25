@@ -1,9 +1,12 @@
 var globalConfig = {
-    map_width: 0,
-    map_height: 0,
-    zoom_step: 0,
-    map_pos_x: 0,
-    map_pos_y: 0
+    map_width: 500,
+    map_height: 500,
+    zoom_step: 1.2,
+    tools: {
+        drag: {
+            enabled : false
+        }
+    }
 };
 
 window.addEventListener('resize', function() {
@@ -41,13 +44,8 @@ function getCtx(){
 /* Init & Bind Event Listeners */
 document.addEventListener("DOMContentLoaded", function(event) {
     
-    globalConfig = {
-        map_width: 500,
-        map_height: 500,
-        zoom_step: 1.25,
-        map_pos_x: window.innerWidth/2,
-        map_pos_y: window.innerHeight/2
-    };
+    globalConfig.map_pos_x = window.innerWidth / 2;
+    globalConfig.map_pos_y = window.innerHeight / 2;
 
     ctx = getCtx();
     ctx.canvas.width = window.innerWidth;
@@ -61,15 +59,24 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var zoomFull = document.getElementsByClassName('zoom_full');
     zoomFull[0].addEventListener('click', zoomFullHandler);
 
-    ctx.canvas.onmousedown = dragCanvasHandler;
-    ctx.canvas.onmouseup = dragEndCanvasHandler;
-
     drawMap();
 });
 
 function clearCanvas() {
     var ctx = getCtx();
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+}
+
+function toggleDrag() {
+    globalConfig.tools.drag.enabled = !globalConfig.tools.drag.enabled;
+    if (globalConfig.tools.drag.enabled) {
+        ctx.canvas.onmousedown = dragCanvasHandler;
+        ctx.canvas.onmouseup = dragEndCanvasHandler;
+    }
+    else {
+        ctx.canvas.onmousedown = null;
+        ctx.canvas.onmouseup = null;
+    }
 }
 
 function zoomClickHandler(event) {
@@ -90,18 +97,15 @@ function zoomClickHandler(event) {
 function zoomFullHandler(event) {
     var mod = window.innerHeight / globalConfig.map_height;
 
+    globalConfig.map_pos_x = window.innerWidth / 2;
+    globalConfig.map_pos_y = window.innerHeight / 2;
     globalConfig.map_height = window.innerHeight;
     globalConfig.map_width *= mod;
     drawMap();
 }
 
 function dragCanvasHandler(e) {
-    var x = globalConfig.map_pos_x;
-    var y = globalConfig.map_pos_y;
     var canvas = getCtx().canvas;
-
-    x = e.pageX - canvas.offsetLeft;
-    y = e.pageY - canvas.offsetTop;
     canvas.onmousemove = dragHandlerMoveCanvas;
 }
 
