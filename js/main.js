@@ -42,8 +42,8 @@ function getCtx(){
 document.addEventListener("DOMContentLoaded", function(event) {
     
     globalConfig = {
-        map_width: 100,
-        map_height: 100,
+        map_width: 500,
+        map_height: 500,
         zoom_step: 1.25,
         map_pos_x: window.innerWidth/2,
         map_pos_y: window.innerHeight/2
@@ -61,8 +61,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var zoomFull = document.getElementsByClassName('zoom_full');
     zoomFull[0].addEventListener('click', zoomFullHandler);
 
-    var canvas = document.getElementById("main_canvas");
-    canvas.addEventListener('drag', dragCanvasHandler);
+    ctx.canvas.onmousedown = dragCanvasHandler;
+    ctx.canvas.onmouseup = dragEndCanvasHandler;
 
     drawMap();
 });
@@ -95,8 +95,26 @@ function zoomFullHandler(event) {
     drawMap();
 }
 
-function dragCanvasHandler(event) {
+function dragCanvasHandler(e) {
+    var x = globalConfig.map_pos_x;
+    var y = globalConfig.map_pos_y;
+    var canvas = getCtx().canvas;
 
+    x = e.pageX - canvas.offsetLeft;
+    y = e.pageY - canvas.offsetTop;
+    canvas.onmousemove = dragHandlerMoveCanvas;
+}
+
+function dragEndCanvasHandler() {
+    var ctx = getCtx();
+    ctx.canvas.onmousemove = null;
+}
+
+function dragHandlerMoveCanvas(e) {
+    var ctx = getCtx();
+    globalConfig.map_pos_x = e.pageX - ctx.canvas.offsetLeft;
+    globalConfig.map_pos_y = e.pageY - ctx.canvas.offsetTop;
+    drawMap();
 }
 
 function hasClass(element, cls) {
