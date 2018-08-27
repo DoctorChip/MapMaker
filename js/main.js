@@ -1,23 +1,43 @@
-var globalConfig = {
-    map_width: 500,
-    map_height: 500,
-    zoom_step: 1.2,
-    tools: {
-        drag: {
-            enabled : false,
-            xInit: 0,
-            yInit: 0
+var app = {
+    // Props
+    globalConfig: {
+        map_width: 500,
+        map_height: 500,
+        zoom_step: 1.2,
+        tools: {
+            drag: {
+                enabled : false,
+                xInit: 0,
+                yInit: 0
+            }
         }
+    },
+    // Methods
+    init: function() {
+        app.globalConfig.map_pos_x = window.innerWidth / 2;
+        app.globalConfig.map_pos_y = window.innerHeight / 2;
+    
+        var ctx = getCtx();
+        ctx.canvas.width = window.innerWidth;
+        ctx.canvas.height = window.innerHeight;
+    
+        var zoomButtons = document.getElementsByClassName('zoom');
+        for (var i = 0; i < zoomButtons.length; i++) {
+            zoomButtons[i].addEventListener('click', zoomClickHandler);
+        };
+    
+        var zoomFull = document.getElementsByClassName('zoom_full');
+        zoomFull[0].addEventListener('click', zoomFullHandler);
+    
+        drawMap();
     }
-};
+}
 
 window.addEventListener('resize', function() {
 
-    ctx = getCtx();
-
+    var ctx = getCtx();
     ctx.canvas.width = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
-
     globalConfig.map_pos_x = window.innerWidth/2;
     globalConfig.map_pos_y = window.innerHeight/2;
 
@@ -36,10 +56,10 @@ function drawMap() {
 
     ctx.fillStyle = 'green';
     ctx.fillRect(
-        globalConfig.map_pos_x - globalConfig.map_width/2,
-        globalConfig.map_pos_y - globalConfig.map_height/2,
-        globalConfig.map_width,
-        globalConfig.map_height);
+        app.globalConfig.map_pos_x - app.globalConfig.map_width/2,
+        app.globalConfig.map_pos_y - app.globalConfig.map_height/2,
+        app.globalConfig.map_width,
+        app.globalConfig.map_height);
 }
 
 function getCtx(){
@@ -47,34 +67,13 @@ function getCtx(){
     return c.getContext("2d");
 }
 
-/* Init & Bind Event Listeners */
-document.addEventListener("DOMContentLoaded", function(event) {
-    
-    globalConfig.map_pos_x = window.innerWidth / 2;
-    globalConfig.map_pos_y = window.innerHeight / 2;
-
-    ctx = getCtx();
-    ctx.canvas.width = window.innerWidth;
-    ctx.canvas.height = window.innerHeight;
-
-    var zoomButtons = document.getElementsByClassName('zoom');
-    for (var i = 0; i < zoomButtons.length; i++) {
-        zoomButtons[i].addEventListener('click', zoomClickHandler);
-    };
-
-    var zoomFull = document.getElementsByClassName('zoom_full');
-    zoomFull[0].addEventListener('click', zoomFullHandler);
-
-    drawMap();
-});
-
 function clearCanvas() {
     var ctx = getCtx();
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 }
 
 function disableTools() {
-    if (globalConfig.tools.drag.enabled) toggleDrag();
+    if (app.globalConfig.tools.drag.enabled) toggleDrag();
 }
 
 function toggleDrag() {
@@ -154,3 +153,5 @@ window.onkeyup = function(e) {
         }
     }
 }
+
+export default app;
