@@ -1,3 +1,6 @@
+import context from './context.js'
+import kb from './keybind.js'
+
 var app = {
     // Props
     globalConfig: {
@@ -17,7 +20,7 @@ var app = {
         app.globalConfig.map_pos_x = window.innerWidth / 2;
         app.globalConfig.map_pos_y = window.innerHeight / 2;
     
-        var ctx = getCtx();
+        var ctx = context.getContext();
         ctx.canvas.width = window.innerWidth;
         ctx.canvas.height = window.innerHeight;
     
@@ -29,13 +32,14 @@ var app = {
         var zoomFull = document.getElementsByClassName('zoom_full');
         zoomFull[0].addEventListener('click', zoomFullHandler);
     
+        kb.bind();
         drawMap();
     }
 }
 
 window.addEventListener('resize', function() {
 
-    var ctx = getCtx();
+    var ctx = context.getContext();
     ctx.canvas.width = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
     globalConfig.map_pos_x = window.innerWidth/2;
@@ -52,7 +56,7 @@ function drawMap() {
 
     clearCanvas();
 
-    var ctx = getCtx();
+    var ctx = context.getContext();
 
     ctx.fillStyle = 'green';
     ctx.fillRect(
@@ -62,32 +66,13 @@ function drawMap() {
         app.globalConfig.map_height);
 }
 
-function getCtx(){
-    var c = document.getElementById("main_canvas");
-    return c.getContext("2d");
-}
-
 function clearCanvas() {
-    var ctx = getCtx();
+    var ctx = context.getContext();
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 }
 
 function disableTools() {
     if (app.globalConfig.tools.drag.enabled) toggleDrag();
-}
-
-function toggleDrag() {
-    var canvas = getCtx().canvas;
-    globalConfig.tools.drag.enabled = !globalConfig.tools.drag.enabled;
-    if (globalConfig.tools.drag.enabled) {
-        ctx.canvas.onmousedown = dragCanvasHandler;
-        ctx.canvas.onmouseup = dragEndCanvasHandler;
-    }
-    else {
-        canvas.onmousemove = null;
-        ctx.canvas.onmousedown = null;
-        ctx.canvas.onmouseup = null;
-    }
 }
 
 function zoomClickHandler(event) {
@@ -115,43 +100,8 @@ function zoomFullHandler(event) {
     drawMap();
 }
 
-function dragCanvasHandler(e) {
-    var canvas = getCtx().canvas;
-
-    globalConfig.tools.drag.xInit = e.clientX - globalConfig.map_pos_x;
-    globalConfig.tools.drag.yInit = e.clientY - globalConfig.map_pos_y;
-
-    canvas.onmousemove = dragHandlerMoveCanvas;
-}
-
-function dragEndCanvasHandler() {
-    var ctx = getCtx();
-    ctx.canvas.onmousemove = null;
-}
-
-function dragHandlerMoveCanvas(e) {
-    var ctx = getCtx();
-    globalConfig.map_pos_x = e.pageX - globalConfig.tools.drag.xInit - ctx.canvas.offsetLeft;
-    globalConfig.map_pos_y = e.pageY - globalConfig.tools.drag.yInit - ctx.canvas.offsetTop;
-    drawMap();
-}
-
 function hasClass(element, cls) {
     return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
-}
-
-/////////////////
-// Keybindings //
-/////////////////
-
-window.onkeyup = function(e) {
-    var key = e.keyCode;
-    switch (key) {
-        // M
-        case 77: {
-            toggleDrag();
-        }
-    }
 }
 
 export default app;
