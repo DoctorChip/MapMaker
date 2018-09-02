@@ -27,10 +27,9 @@ var drag = {
     },
     dragHandlerMoveCanvas(e) {
         var ctx = context.getContext();
-        console.log(window.app.globalConfig);
         window.app.globalConfig.map_pos_x = e.pageX - window.app.globalConfig.tools.drag.xInit - ctx.canvas.offsetLeft;
         window.app.globalConfig.map_pos_y = e.pageY - window.app.globalConfig.tools.drag.yInit - ctx.canvas.offsetTop;
-        drawMap();
+        window.app.drawMap();
     }
 }
 
