@@ -6,7 +6,7 @@ var app = {
 
     // Props
     globalConfig: {
-        map_width: 500,
+        map_width: 1000,
         map_height: 500,
         zoom_step: 1.2,
         tools: {
