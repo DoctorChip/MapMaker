@@ -1,12 +1,12 @@
-import context from '../context.js'
-
 var drag = {
-    toggle() {
-        var canvas = context.getCanvas();
+    
+    // Called by keybindings or UI events
+    toggle: function() {
+        var canvas = window.app.canvas;
         window.app.globalConfig.tools.drag.enabled = !window.app.globalConfig.tools.drag.enabled;
         if (window.app.globalConfig.tools.drag.enabled) {
-            canvas.onmousedown = this.dragCanvasHandler;
-            canvas.onmouseup = this.dragEndCanvasHandler;
+            canvas.onmousedown = drag.dragCanvasHandler;
+            canvas.onmouseup = drag.dragEndCanvasHandler;
         }
         else {
             canvas.onmousemove = null;
@@ -14,19 +14,25 @@ var drag = {
             canvas.onmouseup = null;
         }
     },
-    dragCanvasHandler(e) {
-        var canvas = context.getCanvas();
+
+    // When drag enabled, and mouse-down, bind events for movement of canvas
+    dragCanvasHandler: function(e) {
+        var canvas = window.app.canvas;
         window.app.globalConfig.tools.drag.xInit = e.clientX - window.app.globalConfig.map_pos_x;
         window.app.globalConfig.tools.drag.yInit = e.clientY - window.app.globalConfig.map_pos_y;
     
-        canvas.onmousemove = this.dragHandlerMoveCanvas;
+        canvas.onmousemove = drag.dragHandlerMoveCanvas;
     },
-    dragEndCanvasHandler() {
-        var ctx = context.getContext();
+
+    // On mouse-up, remove canvas-update binding
+    dragEndCanvasHandler: function() {
+        var ctx = window.app.context;
         ctx.canvas.onmousemove = null;
     },
-    dragHandlerMoveCanvas(e) {
-        var ctx = context.getContext();
+
+    // When mouse down and moving, move canvas.
+    dragHandlerMoveCanvas: function(e) {
+        var ctx = window.app.context;
         window.app.globalConfig.map_pos_x = e.pageX - window.app.globalConfig.tools.drag.xInit - ctx.canvas.offsetLeft;
         window.app.globalConfig.map_pos_y = e.pageY - window.app.globalConfig.tools.drag.yInit - ctx.canvas.offsetTop;
         window.app.drawMap();

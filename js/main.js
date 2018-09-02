@@ -17,6 +17,10 @@ var app = {
             }
         }
     },
+
+    // Canvas
+    context: context.getContext(),
+    canvas: context.getCanvas(),
     
     // Functionality
     toolbar,
@@ -33,7 +37,7 @@ var app = {
     drawMap: function() {
         window.app.clearCanvas();
 
-        var ctx = context.getContext();
+        var ctx = window.app.context;
     
         ctx.fillStyle = 'green';
         ctx.fillRect(
@@ -44,7 +48,7 @@ var app = {
     },
 
     clearCanvas: function() {
-        var ctx = context.getContext();
+        var ctx = window.app.context;
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     },
 
@@ -52,13 +56,13 @@ var app = {
         window.app.globalConfig.map_pos_x = window.innerWidth / 2;
         window.app.globalConfig.map_pos_y = window.innerHeight / 2;
     
-        var ctx = context.getContext();
+        var ctx = window.app.context;
         ctx.canvas.width = window.innerWidth;
         ctx.canvas.height = window.innerHeight;
 
         window.addEventListener('resize', function() {
 
-            var ctx = context.getContext();
+            var ctx = window.app.context;
             ctx.canvas.width = window.innerWidth;
             ctx.canvas.height = window.innerHeight;
             window.app.globalConfig.map_pos_x = window.innerWidth/2;

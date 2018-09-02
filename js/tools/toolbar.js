@@ -11,7 +11,7 @@ var toolbar = {
         zoom.init();
 
         window.addEventListener('mouseout', function() {
-            toolbar.disableTools();
+            //toolbar.disableTools();
         });
     },
 
