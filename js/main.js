@@ -31,6 +31,7 @@ var app = {
                     yInit: 0
                 },
                 terrain: {
+                    point_resolution: 5, //px
                     push_enabled: false,
                     pull_enabled: false,
                     sculpt_mode: sculptmode.DISABLED,

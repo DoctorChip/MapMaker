@@ -15,7 +15,9 @@ var zoom = {
         function zoomClickHandler(event) {
             var zoomIn = exts.hasClass(event.target, 'zoom_in');
         
-            if (zoomIn) {
+
+
+            if (zoomIn) {   
                 window.app.globalConfig.map_width *= window.app.globalConfig.zoom_step;
                 window.app.globalConfig.map_height *= window.app.globalConfig.zoom_step;
             }
@@ -24,6 +26,13 @@ var zoom = {
                 window.app.globalConfig.map_height /= window.app.globalConfig.zoom_step;
             }
         
+            // Warp data points to align to new size of map
+            var warpAmount = zoomIn ?
+            window.app.globalConfig.zoom_step :
+            window.app.globalConfig.zoom_step * -1;
+
+            map.setTransformAmount(warpAmount);
+            map.calculatePoints2D();
             map.draw();
         }
         
