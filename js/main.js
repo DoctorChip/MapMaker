@@ -2,6 +2,7 @@ import context from './context.js'
 import kb from './keybind.js'
 import toolbar from './tools/toolbar.js'
 import tools from './tools/tools.js'
+import sculptmode from './tools/terrain/sculptmode.js'
 
 var app = {
 
@@ -31,6 +32,7 @@ var app = {
                 terrain: {
                     push_enabled: false,
                     pull_enabled: false,
+                    sculpt_mode: sculptmode.DISABLED,
                 }
             };
         })()
