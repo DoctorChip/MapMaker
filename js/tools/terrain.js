@@ -1,4 +1,5 @@
 import tools from './tools.js'
+import toolbar from './toolbar.js'
 import sculptmode from './terrain/sculptmode.js'
 
 var terrain = {
@@ -7,9 +8,10 @@ var terrain = {
      *  sets it to PUSH.
      */
     togglePush: function() {
+        toolbar.disableTools();
         window.app.globalConfig.tools.terrain.pull_enabled = false;
         window.app.globalConfig.tools.terrain.push_enabled = !window.app.globalConfig.tools.terrain.push_enabled;
-        
+
         if (window.app.globalConfig.tools.terrain.push_enabled) {
             window.app.globalConfig.tools.setActiveTool(tools.PUSH_TERRAIN);
             this.setSculptMode(sculptmode.PUSH);
@@ -23,6 +25,7 @@ var terrain = {
      *  Same as toggling PUSH, but toggles PULL.
      */
     togglePull: function() {
+        toolbar.disableTools();
         window.app.globalConfig.tools.terrain.push_enabled = false;
         window.app.globalConfig.tools.terrain.pull_enabled = !window.app.globalConfig.tools.terrain.pull_enabled;
         

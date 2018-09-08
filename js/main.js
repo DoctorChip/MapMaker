@@ -3,6 +3,7 @@ import kb from './keybind.js'
 import toolbar from './tools/toolbar.js'
 import tools from './tools/tools.js'
 import sculptmode from './tools/terrain/sculptmode.js'
+import map from './map/map.js'
 
 var app = {
 
@@ -38,41 +39,23 @@ var app = {
         })()
     },
 
-    // Canvas
+    // Functionality
+    map,
     context: context.getContext(),
     canvas: context.getCanvas(),
-    
-    // Functionality
     toolbar,
 
     // Methods
     init: function() {
    
-        window.app.initalSetup();
+        window.app.app_init();
         kb.bind();
         toolbar.bind();
-        window.app.drawMap();
+        map.init();
+        map.draw();
     },
 
-    drawMap: function() {
-        window.app.clearCanvas();
-
-        var ctx = window.app.context;
-    
-        ctx.fillStyle = 'green';
-        ctx.fillRect(
-            app.globalConfig.map_pos_x - app.globalConfig.map_width/2,
-            app.globalConfig.map_pos_y - app.globalConfig.map_height/2,
-            app.globalConfig.map_width,
-            app.globalConfig.map_height);
-    },
-
-    clearCanvas: function() {
-        var ctx = window.app.context;
-        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    },
-
-    initalSetup: function() {
+    app_init: function() {
         window.app.globalConfig.map_pos_x = window.innerWidth / 2;
         window.app.globalConfig.map_pos_y = window.innerHeight / 2;
     
@@ -88,7 +71,7 @@ var app = {
             window.app.globalConfig.map_pos_x = window.innerWidth/2;
             window.app.globalConfig.map_pos_y = window.innerHeight/2;
         
-            window.app.drawMap();
+            map.draw();
         });
     }
 }

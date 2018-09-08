@@ -1,4 +1,5 @@
-import tools from './tools.js';
+import tools from './tools.js'
+import map from '../map/map.js'
 
 var drag = {
     
@@ -39,7 +40,7 @@ var drag = {
         var ctx = window.app.context;
         window.app.globalConfig.map_pos_x = e.pageX - window.app.globalConfig.tools.drag.xInit - ctx.canvas.offsetLeft;
         window.app.globalConfig.map_pos_y = e.pageY - window.app.globalConfig.tools.drag.yInit - ctx.canvas.offsetTop;
-        window.app.drawMap();
+        map.draw();
     }
 }
 

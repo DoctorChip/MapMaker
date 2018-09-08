@@ -1,4 +1,5 @@
 import exts from '../utils/exts.js'
+import map from '../map/map.js'
 
 var zoom = {
     init: function(){
@@ -23,7 +24,7 @@ var zoom = {
                 window.app.globalConfig.map_height /= window.app.globalConfig.zoom_step;
             }
         
-            window.app.drawMap();
+            map.draw();
         }
         
         // Handles maximising the zoom to fit the canvas to the screen.
@@ -49,7 +50,7 @@ var zoom = {
 
             window.app.globalConfig.map_pos_x = window.innerWidth / 2;
             window.app.globalConfig.map_pos_y = window.innerHeight / 2;
-            window.app.drawMap();
+            map.draw();
         }
     }
 }
