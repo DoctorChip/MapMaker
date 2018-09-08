@@ -27,6 +27,10 @@ var app = {
                     enabled : false,
                     xInit: 0,
                     yInit: 0
+                },
+                terrain: {
+                    push_enabled: false,
+                    pull_enabled: false,
                 }
             };
         })()

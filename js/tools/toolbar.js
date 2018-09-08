@@ -1,5 +1,6 @@
 import zoom from './zoom.js'
 import drag from './drag.js'
+import terrain from './terrain.js'
 import tools from './tools.js'
 import utils from '../utils/exts.js'
 
@@ -7,6 +8,7 @@ var toolbar = {
     
     // Register tools
     drag,
+    terrain,
 
     // Bind all required events to toolbar UI
     bind : function() {
