@@ -82,3 +82,11 @@
 .bottom_content .dropdown button:hover {
     background-color: #3e8e41;
 }
+
+.tool_highlight {
+    background-color: red;
+}
+
+.toolbar_highlight > button {
+    color: red;
+}
