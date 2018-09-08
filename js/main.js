@@ -1,6 +1,7 @@
 import context from './context.js'
 import kb from './keybind.js'
 import toolbar from './tools/toolbar.js'
+import tools from './tools/tools.js'
 
 var app = {
 
@@ -9,13 +10,26 @@ var app = {
         map_width: 1000,
         map_height: 500,
         zoom_step: 1.2,
-        tools: {
-            drag: {
-                enabled : false,
-                xInit: 0,
-                yInit: 0
-            }
-        }
+        tools: (function() {
+
+            // Active tool with custom setter
+            var activeTool = tools.NONE;
+
+            return {
+                setActiveTool: function(tool) { 
+                    activeTool = tool;
+                    toolbar.update(); 
+                },
+                getActiveTool: function() {
+                    return activeTool;
+                },
+                drag: {
+                    enabled : false,
+                    xInit: 0,
+                    yInit: 0
+                }
+            };
+        })()
     },
 
     // Canvas

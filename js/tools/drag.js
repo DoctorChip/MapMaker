@@ -1,3 +1,5 @@
+import tools from './tools.js';
+
 var drag = {
     
     // Called by keybindings or UI events
@@ -7,11 +9,13 @@ var drag = {
         if (window.app.globalConfig.tools.drag.enabled) {
             canvas.onmousedown = drag.dragCanvasHandler;
             canvas.onmouseup = drag.dragEndCanvasHandler;
+            window.app.globalConfig.tools.setActiveTool(tools.ZOOM);
         }
         else {
             canvas.onmousemove = null;
             canvas.onmousedown = null;
             canvas.onmouseup = null;
+            window.app.globalConfig.tools.setActiveTool(tools.NONE);
         }
     },
 

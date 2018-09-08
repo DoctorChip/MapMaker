@@ -1,5 +1,6 @@
 import zoom from './zoom.js'
 import drag from './drag.js'
+import tools from './tools.js'
 
 var toolbar = {
     
@@ -15,8 +16,14 @@ var toolbar = {
         });
     },
 
+    update : function() {
+        var activeTool = window.app.globalConfig.tools.getActiveTool();
+        console.log(activeTool);
+    },
+
     disableTools: function() {
         if (app.globalConfig.tools.drag.enabled) drag.toggle();
+        window.app.globalConfig.tools.setActiveTool(tools.NONE);
     }
 }
 
