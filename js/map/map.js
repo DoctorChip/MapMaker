@@ -1,12 +1,16 @@
 var map = {
 
     points: [],
+    config: {
+        colors: [],
+    },
 
     /*
      *  Initalise our data points, spread over the area.
      */
     init: function() {
         this.calculatePoints2D();
+        this.loadDefaultColors();
     },
 
     draw: function() {
@@ -36,12 +40,12 @@ var map = {
      *  Sets the transformation matrix to allow easy rendering of elements onto the canvas
      *  to account for zooming.
      */
-    setTransform(amount) {
+    setTransform: function(amount) {
         var ctx = window.app.context;
         ctx.transform(amount, 0, 0, amount, 0, 0);
     },
 
-    setTranslate(x, y) {
+    setTranslate: function(x, y) {
         var ctx = window.app.context;
         ctx.translate(x, y);  
     },
@@ -70,7 +74,8 @@ var map = {
 
     /*
      *  Clears the canvas. In order to account for changes in our Transform matrix,
-     *  we need to save the transform, reset it to the default, then reapply it.
+     *  we need to save the transform, reset it to the identity matrix, then reapply
+     *  our original, saved matrixs. :)
      */
     clear: function() {
         var ctx = window.app.context;
@@ -78,6 +83,20 @@ var map = {
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         ctx.restore();
+    },
+
+    /*
+     *  Loads a default set of colours for the terrain. Eventually this may
+     *  pull from config files for certain terrain types, custom settings stored
+     *  in the browser, or in user accounts.
+     */
+    loadDefaultColors: function() {
+        this.config.colors = [
+            ['#fff', '#fff', '#fff'],
+            ['#fff', '#fff', '#fff'],
+            ['#fff', '#fff', '#fff'],
+            ['#fff', '#fff', '#fff'],
+        ];
     },
 };
 
