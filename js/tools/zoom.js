@@ -14,24 +14,16 @@ var zoom = {
 
         function zoomClickHandler(event) {
             var zoomIn = exts.hasClass(event.target, 'zoom_in');
-        
 
-
-            if (zoomIn) {   
-                window.app.globalConfig.map_width *= window.app.globalConfig.zoom_step;
-                window.app.globalConfig.map_height *= window.app.globalConfig.zoom_step;
-            }
-            else {
-                window.app.globalConfig.map_width /= window.app.globalConfig.zoom_step;
-                window.app.globalConfig.map_height /= window.app.globalConfig.zoom_step;
-            }
-        
-            // Warp data points to align to new size of map
             var warpAmount = zoomIn ?
             window.app.globalConfig.zoom_step :
-            window.app.globalConfig.zoom_step * -1;
+            (window.app.globalConfig.zoom_step * -1) + 2;
 
-            map.setTransformAmount(warpAmount);
+            map.setTransform(warpAmount);
+            map.setTranslate(
+                window.app.globalConfig.map_width * ((window.app.globalConfig.zoom_step - 1 )/ 2), 
+                window.app.globalConfig.map_height * ((window.app.globalConfig.zoom_step - 1 )/ 2)
+            );
             map.calculatePoints2D();
             map.draw();
         }
@@ -47,18 +39,19 @@ var zoom = {
             {
                 case "y":
 
-                    window.app.globalConfig.map_height = window.innerHeight;
-                    window.app.globalConfig.map_width *= yMod;
+                    map.setTransform(yMod);
                     break;
                     
                 case "x":
-                    window.app.globalConfig.map_height *= xMod;
-                    window.app.globalConfig.map_width = window.innerWidth;
+                    map.setTransform(xMod);
                     break;
             };
 
-            window.app.globalConfig.map_pos_x = window.innerWidth / 2;
-            window.app.globalConfig.map_pos_y = window.innerHeight / 2;
+            map.setTranslate(
+                window.app.globalConfig.map_width * ((window.app.globalConfig.zoom_step - 1 )/ 2), 
+                window.app.globalConfig.map_height * ((window.app.globalConfig.zoom_step - 1 )/ 2)
+            );
+
             map.draw();
         }
     }

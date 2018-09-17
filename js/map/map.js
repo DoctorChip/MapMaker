@@ -21,11 +21,12 @@ var map = {
             app.globalConfig.map_width,
             app.globalConfig.map_height);
 
+        // debug - draw points[]
         var xOffset = app.globalConfig.map_pos_x - app.globalConfig.map_width/2;
         var yOffset = app.globalConfig.map_pos_y - app.globalConfig.map_height/2;
 
+        ctx.strokeStyle = 'black';
         for (var i = 0; i < this.points.length; i++) {
-            ctx.strokeStyle = 'black';
             var pnt = this.points[i];
             ctx.strokeRect(xOffset + pnt.x, yOffset + pnt.y, 1, 1);
         }
@@ -35,9 +36,14 @@ var map = {
      *  Sets the transformation matrix to allow easy rendering of elements onto the canvas
      *  to account for zooming.
      */
-    setTransformAmount(amount) {
+    setTransform(amount) {
         var ctx = window.app.context;
-        ctx.transform(amount, amount, 0, 1, 1, 1);
+        ctx.transform(amount, 0, 0, amount, 0, 0);
+    },
+
+    setTranslate(x, y) {
+        var ctx = window.app.context;
+        ctx.translate(x, y);  
     },
 
     /*
@@ -62,9 +68,16 @@ var map = {
         }
     },
 
+    /*
+     *  Clears the canvas. In order to account for changes in our Transform matrix,
+     *  we need to save the transform, reset it to the default, then reapply it.
+     */
     clear: function() {
         var ctx = window.app.context;
+        ctx.save();
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.restore();
     },
 };
 
