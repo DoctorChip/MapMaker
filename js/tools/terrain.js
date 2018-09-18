@@ -44,6 +44,16 @@ var terrain = {
     },
 
     /*
+     *  Increases or decreases the tool size, which changes how many
+     *  points are hit when using the tool.
+     */
+    modifyToolSize: function(size) {
+        
+        // todo
+        cursor.setCursorSize(size);
+    },
+
+    /*
      *  Configure the sculptor to either push or pull mode.
      *  This changes the direction of the terrain movement.
      */

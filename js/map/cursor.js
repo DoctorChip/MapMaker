@@ -68,6 +68,15 @@ var cursor = {
     },
 
     /*
+     *  Modifies the cursor scaling by an absolute amount, 
+     *  to reflect the state of various
+     *  tools, such as the terrain push and pull tools.
+     */
+    setCursorSize: function(size) {
+        // todo
+    },
+
+    /*
      *  Removes any cursors.
      */
     unbindCursor: function() {
