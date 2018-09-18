@@ -44,13 +44,11 @@ var terrain = {
     },
 
     /*
-     *  Increases or decreases the tool size, which changes how many
-     *  points are hit when using the tool.
+     *  Increases or decreases tool size, which changes how many
+     *  points are hit when using the tool. Affects the PUSH and PULL tools.
      */
     modifyToolSize: function(size) {
-        
-        // todo
-        cursor.setCursorSize(size);
+        window.app.globalConfig.tools.terrain.point_resolution += size; 
     },
 
     /*
