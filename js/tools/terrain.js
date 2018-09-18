@@ -1,6 +1,7 @@
 import tools from './tools.js'
 import toolbar from './toolbar.js'
 import sculptmode from './terrain/sculptmode.js'
+import cursor from '../map/cursor.js'
 
 var terrain = {
     /*
@@ -15,9 +16,11 @@ var terrain = {
         if (window.app.globalConfig.tools.terrain.push_enabled) {
             window.app.globalConfig.tools.setActiveTool(tools.PUSH_TERRAIN);
             this.setSculptMode(sculptmode.PUSH);
+            cursor.assignCursorForTool(tools.PUSH_TERRAIN);
         }
         else {
             this.setSculptMode(sculptmode.DISABLED);
+            cursor.assignCursorForTool(tools.NONE);
         }
     },
 
@@ -32,9 +35,11 @@ var terrain = {
         if (window.app.globalConfig.tools.terrain.pull_enabled) {
             window.app.globalConfig.tools.setActiveTool(tools.PULL_TERRAIN);
             this.setSculptMode(sculptmode.PULL);
+            cursor.assignCursorForTool(tools.PULL_TERRAIN);
         }
         else {
             this.setSculptMode(sculptmode.DISABLED);
+            cursor.assignCursorForTool(tools.NONE);
         }
     },
 

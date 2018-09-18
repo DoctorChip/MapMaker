@@ -1,5 +1,8 @@
+import cursor from './cursor.js'
+
 var map = {
 
+    cursor,
     points: [],
     config: {
         colors: [],
@@ -25,15 +28,15 @@ var map = {
             app.globalConfig.map_width,
             app.globalConfig.map_height);
 
-        // debug - draw points[]
-        var xOffset = app.globalConfig.map_pos_x - app.globalConfig.map_width/2;
-        var yOffset = app.globalConfig.map_pos_y - app.globalConfig.map_height/2;
+        // // debug - draw points[]
+        // var xOffset = app.globalConfig.map_pos_x - app.globalConfig.map_width/2;
+        // var yOffset = app.globalConfig.map_pos_y - app.globalConfig.map_height/2;
 
-        ctx.strokeStyle = 'black';
-        for (var i = 0; i < this.points.length; i++) {
-            var pnt = this.points[i];
-            ctx.strokeRect(xOffset + pnt.x, yOffset + pnt.y, 1, 1);
-        }
+        // ctx.strokeStyle = 'black';
+        // for (var i = 0; i < this.points.length; i++) {
+        //     var pnt = this.points[i];
+        //     ctx.strokeRect(xOffset + pnt.x, yOffset + pnt.y, 1, 1);
+        // }
     },
 
     /*
