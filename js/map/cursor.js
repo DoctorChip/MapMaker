@@ -68,24 +68,25 @@ var cursor = {
      */
     bindCursor: function(config) {
 
+        // Hide default cursor
         var canvas =  context.getCanvas();
         exts.addClass(canvas, 'tool-active');
 
-        window.addEventListener('mousemove', function(e) {
-            var x = e.pageX - 10;
-            var y = e.pageY - 30;
-            var scale = 50;
-            var ctx = context.getContext();
-            
-            map.clear();
-            
+        // Load image
+        var img = exts.loadSvg(config.image);
+        img.onload = function() {
 
-            var img = exts.loadSvg(config.image);
-            img.onload = function() {
+            // Bind image draw to mousemove
+            window.addEventListener('mousemove', function(e) {
+                var scale = 50;
+                var x = e.pageX - scale/2;
+                var y = e.pageY - scale/2;
+                var ctx = context.getContext();
+
+                map.draw();
                 ctx.drawImage(img, x, y, scale, scale);
-            };
-            map.draw();
-        });
+            });
+        };
     },
 
     /*
