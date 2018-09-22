@@ -1,5 +1,6 @@
 import tools from './tools.js'
 import map from '../map/map.js'
+import cursor from '../map/cursor.js'
 
 var drag = {
     
@@ -11,12 +12,14 @@ var drag = {
             canvas.onmousedown = drag.dragCanvasHandler;
             canvas.onmouseup = drag.dragEndCanvasHandler;
             window.app.globalConfig.tools.setActiveTool(tools.ZOOM);
+            cursor.assignCursorForTool(tools.ZOOM);
         }
         else {
             canvas.onmousemove = null;
             canvas.onmousedown = null;
             canvas.onmouseup = null;
             window.app.globalConfig.tools.setActiveTool(tools.NONE);
+            cursor.assignCursorForTool(tools.NONE);
         }
     },
 

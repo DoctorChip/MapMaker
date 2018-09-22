@@ -11,3 +11,7 @@ body {
     height: 100%;
     background-color: #232323;
 }
+
+.tool-active {
+    cursor: none;
+}

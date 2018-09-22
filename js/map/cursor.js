@@ -1,4 +1,7 @@
 import tools from '../tools/tools.js'
+import context from '../context.js'
+import exts from '../utils/exts.js'
+import map from '../map/map.js'
 
 var cursors = [
     { 
@@ -6,7 +9,7 @@ var cursors = [
         tool: tools.NONE,
         config: {
             index: 0,
-            image: "/img/cursor/none",
+            image: "img/cursor/none",
             color: "#fff"
         }
     },
@@ -15,7 +18,7 @@ var cursors = [
         tool: tools.ZOOM,
         config: {
             index: 1,
-            image: "/img/cursor/zoom",
+            image: "img/cursor/zoom.svg",
             color: "#fff"
         }
     },
@@ -24,7 +27,7 @@ var cursors = [
         tool: tools.DRAG,
         config: {
             index: 2,
-            image: "/img/cursor/drag",
+            image: "img/cursor/zoom.svg",
             color: "#fff"
         }
     },
@@ -33,7 +36,7 @@ var cursors = [
         tool: tools.PUSH_TERRAIN,
         config: {
             index: 3,
-            image: "/img/cursor/push",
+            image: "img/cursor/push.svg",
             color: "#fff"
         }
     },
@@ -42,7 +45,7 @@ var cursors = [
         tool: tools.PULL_TERRAIN,
         config: {
             index: 4,
-            image: "/img/cursor/pull",
+            image: "img/cursor/pull.svg",
             color: "#fff"
         }
     },
@@ -64,14 +67,34 @@ var cursor = {
      *  Draws the cursor on the mouse.
      */
     bindCursor: function(config) {
-        // todo
+
+        var canvas =  context.getCanvas();
+        exts.addClass(canvas, 'tool-active');
+
+        window.addEventListener('mousemove', function(e) {
+            var x = e.pageX - 10;
+            var y = e.pageY - 30;
+            var scale = 50;
+            var ctx = context.getContext();
+            
+            map.clear();
+            
+
+            var img = exts.loadSvg(config.image);
+            img.onload = function() {
+                ctx.drawImage(img, x, y, scale, scale);
+            };
+            map.draw();
+        });
     },
 
     /*
      *  Removes any cursors.
      */
     unbindCursor: function() {
-        // todo
+        
+        var canvas =  context.getCanvas();
+        exts.removeClass(canvas, 'tool-active');
     }
 };
 

@@ -20,6 +20,12 @@ var exts = {
         }
         ele.className = ele.className + " " + className;
     },
+
+    loadSvg: function(path) {
+        var img = new Image();
+        img.src = path;
+        return img;
+    }
 }
 
 export default exts;
