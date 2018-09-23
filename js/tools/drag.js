@@ -11,8 +11,8 @@ var drag = {
         if (window.app.globalConfig.tools.drag.enabled) {
             canvas.onmousedown = drag.dragCanvasHandler;
             canvas.onmouseup = drag.dragEndCanvasHandler;
-            window.app.globalConfig.tools.setActiveTool(tools.ZOOM);
-            cursor.assignCursorForTool(tools.ZOOM);
+            window.app.globalConfig.tools.setActiveTool(tools.DRAG);
+            cursor.assignCursorForTool(tools.DRAG);
         }
         else {
             canvas.onmousemove = null;

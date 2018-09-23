@@ -1,4 +1,5 @@
 import cursor from './cursor.js'
+import context from '../context.js'
 
 var map = {
 
@@ -19,7 +20,7 @@ var map = {
     draw: function() {
         this.clear();
 
-        var ctx = window.app.context;
+        var ctx = context.getContext();
     
         ctx.fillStyle = 'green';
         ctx.fillRect(
@@ -44,12 +45,12 @@ var map = {
      *  to account for zooming.
      */
     setTransform: function(amount) {
-        var ctx = window.app.context;
+        var ctx = context.getContext();
         ctx.transform(amount, 0, 0, amount, 0, 0);
     },
 
     setTranslate: function(x, y) {
-        var ctx = window.app.context;
+        var ctx = context.getContext();
         ctx.translate(x, y);  
     },
 
@@ -81,11 +82,10 @@ var map = {
      *  our original, saved matrixs. :)
      */
     clear: function() {
-        var ctx = window.app.context;
-        ctx.save();
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        var ctx = context.getContext();
+        this.popTransform();
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-        ctx.restore();
+        this.pushTransform();
     },
 
     /*
@@ -101,6 +101,19 @@ var map = {
             ['#fff', '#fff', '#fff'],
         ];
     },
+
+    // Remove and save any applied transforms
+    popTransform: function() {
+        var ctx = context.getContext();
+        ctx.save();
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+    },
+
+    // Restore any of our removed + saved tranaforms
+    pushTransform: function() {
+        var ctx = context.getContext();
+        ctx.restore();
+    }
 };
 
 export default map;

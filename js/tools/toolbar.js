@@ -44,7 +44,7 @@ var toolbar = {
         var children = [...toolbar.children];
         var childCount = children.filter(x => utils.hasClass(x, 'dropdown')).length;
         if (childCount == 0) {
-            alert("Something went wrong.");
+            alert("0001: Something went wrong.");
             return;
         };
 
@@ -67,7 +67,7 @@ var toolbar = {
             items: return_list,
             getById: function(id) {
                 var result = this.items.filter(x => x.id == id);
-                if (result.length != 1) { alert ("Something went wrong."); return null; }
+                if (result.length != 1) { alert ("0002: Something went wrong: " + result.length); return null; }
                 return result[0];
             },
         };

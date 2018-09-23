@@ -9,8 +9,8 @@ var cursors = [
         tool: tools.NONE,
         config: {
             index: 0,
-            image: "img/cursor/none",
-            color: "#fff"
+            image: "",
+            color: ""
         }
     },
     { 
@@ -27,7 +27,7 @@ var cursors = [
         tool: tools.DRAG,
         config: {
             index: 2,
-            image: "img/cursor/zoom.svg",
+            image: "img/cursor/drag.svg",
             color: "#fff"
         }
     },
@@ -84,7 +84,9 @@ var cursor = {
                 var ctx = context.getContext();
 
                 map.draw();
+                map.popTransform();
                 ctx.drawImage(img, x, y, scale, scale);
+                map.pushTransform();
             });
         };
     },
