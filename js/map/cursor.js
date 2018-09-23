@@ -59,8 +59,11 @@ var cursor = {
     assignCursorForTool: function(toolMode) {
         var filteredCursors = cursors.filter(x => x.tool == toolMode);
         if (filteredCursors.length != 1) return;
-        var cursorConfig = filteredCursors[0].config;
-        this.bindCursor(cursorConfig);
+        var cursor = filteredCursors[0];
+
+        cursor.tool === tools.NONE ?
+            this.unbindCursor() :
+            this.bindCursor(cursor.config);
     },
 
     /*
@@ -77,17 +80,7 @@ var cursor = {
         img.onload = function() {
 
             // Bind image draw to mousemove
-            window.addEventListener('mousemove', function(e) {
-                var scale = 50;
-                var x = e.pageX - scale/2;
-                var y = e.pageY - scale/2;
-                var ctx = context.getContext();
-
-                map.draw();
-                map.popTransform();
-                ctx.drawImage(img, x, y, scale, scale);
-                map.pushTransform();
-            });
+            window.addEventListener('mousemove', drawImageOnMove(img));
         };
     },
 
@@ -98,6 +91,27 @@ var cursor = {
         
         var canvas =  context.getCanvas();
         exts.removeClass(canvas, 'tool-active');
+
+        window.removeEventListener('mousemove', drawImageOnMove, false);
+    }
+};
+
+/*
+ *  A curried function which allows us to pass in our image,
+ *  access the event for the eventListener, and also name it so we can
+ *  then remove it when done.
+ */
+var drawImageOnMove = function(img) {
+    return function inner_func(e) {
+        var scale = 50;
+        var x = e.pageX - scale/2;
+        var y = e.pageY - scale/2;
+        var ctx = context.getContext();
+    
+        map.draw();
+        map.popTransform();
+        ctx.drawImage(img, x, y, scale, scale);
+        map.pushTransform();
     }
 };
 
