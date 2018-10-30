@@ -65,6 +65,13 @@ var terrain = {
     toggleTerrainSculpt: function() {
         // i dont know what to do here LOL
     },
+
+    /*
+     *  Sets the size of the brush for push or pull of terrain.
+     */
+    setTerrainToolSize: function(sizePixels) {
+        // oh shit i dont know
+    }
 }
 
 export default terrain;

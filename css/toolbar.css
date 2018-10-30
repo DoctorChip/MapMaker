@@ -83,6 +83,28 @@
     background-color: #3e8e41;
 }
 
+.hidden {
+    display: none!important;
+}
+
+.logger {
+    position: absolute;
+    bottom: 0px;
+    display: inline-block;
+    margin-left: 10px;
+    margin-bottom: 7px;
+}
+
+.logger > p {
+    color: red;
+    font-size: 0.9em;
+    display: block;
+    width: 100%;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    font-family: monospace;
+}
+
 .tool_highlight {
     color: red !important;
 }

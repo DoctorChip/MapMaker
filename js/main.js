@@ -4,8 +4,12 @@ import toolbar from './tools/toolbar.js'
 import tools from './tools/tools.js'
 import sculptmode from './tools/terrain/sculptmode.js'
 import map from './map/map.js'
+import logger from './logger.js'
 
 var app = {
+
+    debug: true,
+    debug_log_count_limit: 10,
 
     // Props
     globalConfig: {
@@ -57,6 +61,9 @@ var app = {
     },
 
     app_init: function() {
+
+        logger.init();
+
         window.app.globalConfig.map_pos_x = window.innerWidth / 2;
         window.app.globalConfig.map_pos_y = window.innerHeight / 2;
     

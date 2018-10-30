@@ -2,6 +2,7 @@ import tools from '../tools/tools.js'
 import context from '../context.js'
 import exts from '../utils/exts.js'
 import map from '../map/map.js'
+import logger from '../logger.js'
 
 var cursors = [
     { 
@@ -57,26 +58,29 @@ var cursor = {
      *  information about the correct type of cursor to display for the tool.
      */
     assignCursorForTool: function(toolMode) {
+
         var filteredCursors = cursors.filter(x => x.tool == toolMode);
         if (filteredCursors.length != 1) return;
         var cursor = filteredCursors[0];
 
         cursor.tool === tools.NONE ?
             this.unbindCursor() :
-            this.bindCursor(cursor.config);
+            this.bindCursor(cursor);
     },
 
     /*
      *  Draws the cursor on the mouse.
      */
-    bindCursor: function(config) {
+    bindCursor: function(cursor) {
+
+        logger.print("Binding cursor for " + cursor.tool);
 
         // Hide default cursor
         var canvas =  context.getCanvas();
         exts.addClass(canvas, 'tool-active');
 
         // Load image
-        var img = exts.loadSvg(config.image);
+        var img = exts.loadSvg(cursor.config.image);
         img.onload = function() {
 
             // Bind image draw to mousemove
@@ -88,11 +92,11 @@ var cursor = {
      *  Removes any cursors.
      */
     unbindCursor: function() {
-        
+        logger.print("Unbinding all cursors");
         var canvas =  context.getCanvas();
         exts.removeClass(canvas, 'tool-active');
 
-        window.removeEventListener('mousemove', drawImageOnMove, false);
+        window.removeEventListener('mousemove', drawImageOnMoveInner);
     }
 };
 
@@ -102,10 +106,10 @@ var cursor = {
  *  then remove it when done.
  */
 var drawImageOnMove = function(img) {
-    return function inner_func(e) {
+    var drawImageOnMoveInner = function(event) {
         var scale = 50;
-        var x = e.pageX - scale/2;
-        var y = e.pageY - scale/2;
+        var x = event.pageX - scale/2;
+        var y = event.pageY - scale/2;
         var ctx = context.getContext();
     
         map.draw();
@@ -113,6 +117,7 @@ var drawImageOnMove = function(img) {
         ctx.drawImage(img, x, y, scale, scale);
         map.pushTransform();
     }
+    return drawImageOnMoveInner;
 };
 
 export default cursor;
