@@ -63,6 +63,7 @@ var app = {
     app_init: function() {
 
         logger.init();
+        logger.print("App init fired.");
 
         window.app.globalConfig.map_pos_x = window.innerWidth / 2;
         window.app.globalConfig.map_pos_y = window.innerHeight / 2;

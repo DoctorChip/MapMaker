@@ -81,10 +81,10 @@ var cursor = {
 
         // Load image
         var img = exts.loadSvg(cursor.config.image);
-        img.onload = function() {
 
+        img.onload = function() {
             // Bind image draw to mousemove
-            window.addEventListener('mousemove', drawImageOnMove(img));
+            canvas.addEventListener('mousemove', drawImageOnMove(img));
         };
     },
 
@@ -93,20 +93,23 @@ var cursor = {
      */
     unbindCursor: function() {
         logger.print("Unbinding all cursors");
+
         var canvas =  context.getCanvas();
         exts.removeClass(canvas, 'tool-active');
-
-        window.removeEventListener('mousemove', drawImageOnMoveInner);
+        canvas.removeEventListener('mousemove', drawImageOnMoveInner);
+        map.draw();
     }
 };
 
 /*
  *  A curried function which allows us to pass in our image,
  *  access the event for the eventListener, and also name it so we can
- *  then remove it when done.
+ *  then remove it when done. The name of the EventListener will be
+ *  drawImageOnMoveInner, with no parameters.
  */
+var drawImageOnMoveInner;
 var drawImageOnMove = function(img) {
-    var drawImageOnMoveInner = function(event) {
+    drawImageOnMoveInner = function(event) {
         var scale = 50;
         var x = event.pageX - scale/2;
         var y = event.pageY - scale/2;

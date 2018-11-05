@@ -1,5 +1,7 @@
 import exts from '../utils/exts.js'
 import map from '../map/map.js'
+import logger from '../logger.js'
+import context from '../context.js'
 
 var zoom = {
     init: function(){
@@ -18,12 +20,17 @@ var zoom = {
             var warpAmount = zoomIn ?
             window.app.globalConfig.zoom_step :
             (window.app.globalConfig.zoom_step * -1) + 2;
-
+            
+            logger.print("Zooming by: " + warpAmount);
             map.setTransform(warpAmount);
-            map.setTranslate(
-                window.app.globalConfig.map_width * ((window.app.globalConfig.zoom_step - 1 )/ 2), 
-                window.app.globalConfig.map_height * ((window.app.globalConfig.zoom_step - 1 )/ 2)
-            );
+
+            zoomIn ?
+                // I do not understand these numbers.
+                // When zooming in, translate by 66.66, 66.66
+                // When zooming out, 100, 100.
+                map.setTranslate(-(200/3), -(200/3)) :
+                map.setTranslate(100, 100);
+
             map.calculatePoints2D();
             map.draw();
         }
@@ -31,26 +38,20 @@ var zoom = {
         // Handles maximising the zoom to fit the canvas to the screen.
         function zoomFullHandler() {
 
-            var yMod = window.innerHeight / window.app.globalConfig.map_height;
-            var xMod = window.innerWidth / window.app.globalConfig.map_width;
-            var modAxis = xMod <= yMod ? "x" : "y";
+            var modAxis = window.app.globalConfig.map_width <= 
+                          window.app.globalConfig.map_height ? "x" : "y";
 
-            switch (modAxis)
-            {
-                case "y":
+            var currentTransform = context.getTransform();
 
-                    map.setTransform(yMod);
-                    break;
-                    
-                case "x":
-                    map.setTransform(xMod);
-                    break;
-            };
+            logger.print("Zooming to full size. Detected axis to snap to: " + 
+                         modAxis + ". Transforming: " + 1/currentTransform);
 
-            map.setTranslate(
-                window.app.globalConfig.map_width * ((window.app.globalConfig.zoom_step - 1 )/ 2), 
-                window.app.globalConfig.map_height * ((window.app.globalConfig.zoom_step - 1 )/ 2)
-            );
+            context.setTransform(1/currentTransform);
+
+             map.setTranslate(
+                 window.app.globalConfig.map_width * ((window.app.globalConfig.zoom_step - 1 )/ 2), 
+                 window.app.globalConfig.map_height * ((window.app.globalConfig.zoom_step - 1 )/ 2)
+             );
 
             map.draw();
         }

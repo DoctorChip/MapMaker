@@ -41,12 +41,10 @@ var map = {
     },
 
     /*
-     *  Sets the transformation matrix to allow easy rendering of elements onto the canvas
-     *  to account for zooming.
+     *  Proxy through the the context method, setTransform.
      */
     setTransform: function(amount) {
-        var ctx = context.getContext();
-        ctx.transform(amount, 0, 0, amount, 0, 0);
+        context.setTransform(amount);
     },
 
     setTranslate: function(x, y) {

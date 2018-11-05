@@ -39,9 +39,8 @@ var toolbar = {
 
         // find toolbar
         var toolbar = document.getElementById('main_toolbar');
+        var children = Array.from(toolbar.children);
 
-        // count children
-        var children = [...toolbar.children];
         var childCount = children.filter(x => utils.hasClass(x, 'dropdown')).length;
         if (childCount == 0) {
             alert("0001: Something went wrong.");
@@ -52,9 +51,9 @@ var toolbar = {
         // process children
         for (var i = 0; i < childCount; i++) {
             var item = children[i];
-            var itemChildren = [...item.children].filter(x => utils.hasClass(x, 'dropdown-content'));
+            var itemChildren = Array.from(item.children).filter(x => utils.hasClass(x, 'dropdown-content'));
             for (var j = 0; j < itemChildren.length; j++) {
-                var tools = [...itemChildren[j].children];
+                var tools = Array.from(itemChildren[j].children);
                 var flattenedTools = tools.map(tool => { return { id: tool.getAttribute('data-tool-id') , item: tool, parent: item }; });
                 for (var k = 0; k < flattenedTools.length; k++) {
                     return_list.push(flattenedTools[k]);
