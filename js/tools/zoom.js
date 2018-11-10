@@ -38,20 +38,22 @@ var zoom = {
         // Handles maximising the zoom to fit the canvas to the screen.
         function zoomFullHandler() {
 
-            var modAxis = window.app.globalConfig.map_width <= 
+            var xModNative = window.app.globalConfig.map_width / window.innerWidth;
+            var yModNative = window.app.globalConfig.map_height / window.innerHeight;
+            var modAxis = window.app.globalConfig.map_width >= 
                           window.app.globalConfig.map_height ? "x" : "y";
 
             var currentTransform = context.getTransform();
-
-            logger.print("Zooming to full size. Detected axis to snap to: " + 
-                         modAxis + ". Transforming: " + 1/currentTransform);
-
             context.setTransform(1/currentTransform);
+            context.setTransform(1/(modAxis == "x" ? xModNative : yModNative));
 
-             map.setTranslate(
-                 window.app.globalConfig.map_width * ((window.app.globalConfig.zoom_step - 1 )/ 2), 
-                 window.app.globalConfig.map_height * ((window.app.globalConfig.zoom_step - 1 )/ 2)
-             );
+            var currentTranslate = context.getTranslate();
+            map.setTranslate(
+                currentTranslate[0] * -1,
+                currentTranslate[1] * -1,
+            );
+            map.setTranslate(205, 300);
+
 
             map.draw();
         }

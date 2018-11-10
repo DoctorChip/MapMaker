@@ -47,9 +47,11 @@ var map = {
         context.setTransform(amount);
     },
 
+    /*
+     *  Proxy to setTranslate method on context.
+     */
     setTranslate: function(x, y) {
-        var ctx = context.getContext();
-        ctx.translate(x, y);  
+        context.setTranslate(x, y);
     },
 
     /*

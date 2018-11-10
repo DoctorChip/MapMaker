@@ -3,6 +3,7 @@ import logger from "./logger.js";
 var ctx = {
 
     currentTransform: 1,
+    currentTranslate: [0,0], // X, Y
 
     getContext() {
     var c = document.getElementById("main_canvas");
@@ -32,6 +33,23 @@ var ctx = {
         this.currentTransform *= amount;
 
         logger.print("Setting transform: " + amount + ". New transform: " + this.currentTransform);
+    },
+
+    /*
+     *  Set the canvas translate and also keep track of it for easy querying.
+     */
+    setTranslate(x, y) {
+        this.currentTranslate[0] += x;
+        this.currentTranslate[1] += y;
+
+        var ctx = this.getContext();
+        ctx.translate(x, y);
+
+        logger.print("Setting translate, X: " + x + ". Y: " + y + ". New X: " + this.currentTranslate[0] + ". Now Y: " + this.currentTranslate[1] + ".");
+    },
+
+    getTranslate() {
+        return this.currentTranslate;
     },
 
     getTransform() {
