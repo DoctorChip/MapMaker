@@ -29,7 +29,14 @@ var map = {
             app.globalConfig.map_width,
             app.globalConfig.map_height);
 
-        // // debug - draw points[]
+        // Groups points
+        var terrainGroups = calculateTerrainGroups();
+
+        terrainGroups.forEach(g => {
+
+        });
+
+        // debug - draw points[]
         // var xOffset = app.globalConfig.map_pos_x - app.globalConfig.map_width/2;
         // var yOffset = app.globalConfig.map_pos_y - app.globalConfig.map_height/2;
 
@@ -74,6 +81,85 @@ var map = {
                 });
             }
         }
+    },
+
+    /*
+     *  Group the map points into groups, by 'island' groups, and by Z axis value.
+     */
+    calculateTerrainGroups: function() {
+
+        var pageWidth = window.app.globalConfig.map_width;
+        var pageHeight = window.app.globalConfig.map_height;
+
+        // Group all points by Z value
+        var Zgroups = { };
+        this.points.forEach(p => {
+            var groupZ = Zgroups[p.z];
+            if (groupZ) {
+                groupZ.push(p);
+            } else {
+                Zgroups[p.z] = [p];
+            }
+        });
+        
+        let islands = []; // A group of adjacent points with the same Z value.
+
+        // Process Z groups, finding islands
+        Zgroups.forEach(g => {
+            while (g.length > 0) {
+                // For each point in a group...
+                let island = [];
+
+                let foundNeigbour = true;
+                while (foundNeigbour) {
+                    let p = g[0]; g.pop[p]; // Take an initial point and remove from group
+
+                    let neighbours = []; // get neighbours of initial point
+
+                    if (p.x - 1 > 0 || p.x + 1 < pageWidth) { // Restrict to page X
+
+                    }
+                    if (p.y - 1 > 0 || p.y + 1 < pageHeight) { // Restrict to page Y
+
+                    }
+
+                    if (neighbours.length === 0){
+                        foundNeigbour = false;
+                    } else {
+                        island.push(neighbours); // Add neighbours to island array
+                        g.pop(neighbours); // Remove neighbours from group
+                    }
+                }
+                
+                islands.push(island);
+            };
+        });
+
+        return islands;
+    },
+
+    /*
+     *  Returns all the points in an area, represented by an x and y coord of the centre
+     *  of the area, and a radius.
+     */
+    getPointsWithinArea: function(x, y, r) {
+        return this.points.filter(p => {
+            let xd = Math.abs(p.x - x);
+            let yd = Math.abs(p.y - y);
+            let d = Math.sqrt(xd*xd + yd*yd);
+            return d < r;
+        });
+    },
+
+    /*
+     *  Modifies points on the map. The passed values are represented as a (pos, val) pair,
+     *  as a list.
+     */
+    modifyPointsArray: function(pointsArray) {
+        pointsArray.forEach(i => {
+            let p = this.points.filter(o => i.x == o.x && i.y == o.y)[0];
+            p.z = i.z;
+        });
     },
 
     /*

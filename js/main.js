@@ -36,9 +36,11 @@ var app = {
                 },
                 terrain: {
                     point_resolution: 5, //px
+                    tool_radius: 5, //px
                     push_enabled: false,
                     pull_enabled: false,
                     sculpt_mode: sculptmode.DISABLED,
+                    mouse_down: false,
                 }
             };
         })()
@@ -58,6 +60,8 @@ var app = {
         toolbar.bind();
         map.init();
         map.draw();
+
+        console.log(window.app);
     },
 
     app_init: function() {

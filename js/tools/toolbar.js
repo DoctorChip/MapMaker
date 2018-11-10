@@ -11,7 +11,7 @@ var toolbar = {
     terrain,
 
     // Bind all required events to toolbar UI
-    bind : function() {
+    bind: function() {
         zoom.init();
 
         window.addEventListener('mouseout', function() {
@@ -19,7 +19,7 @@ var toolbar = {
         });
     },
 
-    update : function() {
+    update: function() {
         var activeTool = window.app.globalConfig.tools.getActiveTool();
         this.highlight(activeTool);
     },
