@@ -33,7 +33,7 @@ var map = {
         var terrainGroups = calculateTerrainGroups();
 
         terrainGroups.forEach(g => {
-
+            // 
         });
 
         // debug - draw points[]
@@ -67,13 +67,10 @@ var map = {
     calculatePoints2D: function() {
 
         var resolution = window.app.globalConfig.tools.terrain.point_resolution;
-        var mapH = window.app.globalConfig.map_height;
-        var mapW = window.app.globalConfig.map_width;
-        var xPoints = mapW / resolution;
-        var yPoints = mapH / resolution;
+        var size = this.getPointsArraySize();
         
-        for (var x = 1; x < xPoints; x++) {
-            for (var y = 1; y < yPoints; y++) {
+        for (var x = 1; x < size.X; x++) {
+            for (var y = 1; y < size.Y; y++) {
                 this.points.push({
                     x: x * resolution,
                     y: y * resolution,
@@ -84,58 +81,97 @@ var map = {
     },
 
     /*
+     *  Using the size of the map and the point resolution from the settings,
+     *  find the dimensions of our 2D points array. E.g., will return { X: 100, Y: 100 }.
+     */
+    getPointsArraySize: function() {
+        var resolution = window.app.globalConfig.tools.terrain.point_resolution;
+        var mapH = window.app.globalConfig.map_height;
+        var mapW = window.app.globalConfig.map_width;
+        var xPoints = mapW / resolution;
+        var yPoints = mapH / resolution;
+        return { X: xPoints, Y: yPoints };
+    },
+
+    /*
      *  Group the map points into groups, by 'island' groups, and by Z axis value.
      */
     calculateTerrainGroups: function() {
 
-        var pageWidth = window.app.globalConfig.map_width;
-        var pageHeight = window.app.globalConfig.map_height;
+        const directions = ["UP", "DOWN", "LEFT", "RIGHT", "UPLEFT",
+                            "UPRIGHT", "DOWNLEFT", "DOWNRIGHT"];
 
-        // Group all points by Z value
-        var Zgroups = { };
-        this.points.forEach(p => {
-            var groupZ = Zgroups[p.z];
+        var size = this.getPointsArraySize();
+        let islands = []; // A group of adjacent points with the same Z value.
+        var points = this.points;
+
+        // Process points, finding islands
+        while (points.length > 0) {
+
+            let island = [];
+            let foundNeigbour = true;
+
+            while (foundNeigbour) {
+
+                let neighbours = []; // get neighbours of initial point
+                let neighbourBuffer = []; // A temp holding array of matching points.
+                let p = points[0]; neighbours.push(p); // Take an initial point
+
+                // Check all neighbours
+                directions.forEach(direction => {
+
+                    let p_result = findNeighbour(p, direction, points, size.X, size.Y);
+
+                    if (p_result !== null && p_result.z === p.z){
+                        neighbourBuffer.push(p_result); points.pop(p_result);
+                    }
+                });
+
+                while (neighbourBuffer.length > 0){
+
+                    var newBuffer = [];
+
+                    neighbourBuffer.forEach(np => {
+                        let p_result = findNeighbour(np, direction, points, size.X, size.Y);
+                        if (p_result !== null && p_result.z === np.z){
+                            newBuffer.push(p_result);
+                        }
+                    });
+
+                    neighbours.push(neighbourBuffer);
+                    neighbourBuffer.push(newBuffer);
+                }
+
+                if (neighbours.length === 0) {
+                    foundNeigbour = false;
+                }
+                else {
+                    island.push(neighbours); // Add neighbours to island array
+                    points.pop(neighbours); // Remove neighbours
+                }
+            }
+            
+            // If non empty, push to islands array for return.
+            if (island.length > 0) {
+                islands.push(island);
+            }
+        };
+
+        // Group islands by Z, by looking at the Z value of the first point in an island
+        let Zgroups = { };
+        islands.forEach(p => {
+            var groupZ = Zgroups[p[0].z];
             if (groupZ) {
                 groupZ.push(p);
             } else {
-                Zgroups[p.z] = [p];
+                Zgroups[p[0].z] = [p];
             }
         });
-        
-        let islands = []; // A group of adjacent points with the same Z value.
 
-        // Process Z groups, finding islands
-        Zgroups.forEach(g => {
-            while (g.length > 0) {
-                // For each point in a group...
-                let island = [];
-
-                let foundNeigbour = true;
-                while (foundNeigbour) {
-                    let p = g[0]; g.pop[p]; // Take an initial point and remove from group
-
-                    let neighbours = []; // get neighbours of initial point
-
-                    if (p.x - 1 > 0 || p.x + 1 < pageWidth) { // Restrict to page X
-
-                    }
-                    if (p.y - 1 > 0 || p.y + 1 < pageHeight) { // Restrict to page Y
-
-                    }
-
-                    if (neighbours.length === 0){
-                        foundNeigbour = false;
-                    } else {
-                        island.push(neighbours); // Add neighbours to island array
-                        g.pop(neighbours); // Remove neighbours from group
-                    }
-                }
-                
-                islands.push(island);
-            };
-        });
-
-        return islands;
+        /*
+         *   Zgroups: { [Z:0, [...]], [Z:1, [...]], ...}
+         */
+        return Zgroups;
     },
 
     /*
@@ -201,5 +237,40 @@ var map = {
         ctx.restore();
     }
 };
+
+var findNeighbour = function(sourcePoint, direction, source, width, height) {
+
+    var pCount = source.length;
+
+    let x = source.x;
+    let y = source.y;
+
+    switch (direction){
+        case "UP": {
+            break;
+        }
+        case "DOWN": {
+            break;
+        }
+        case "LEFT": {
+            break;
+        }
+        case "RIGHT": {
+            break;
+        }
+        case "UPLEFT": {
+            break;
+        }
+        case "UPRIGHT": {
+            break;
+        }
+        case "DOWNLEFT": {
+            break;
+        }
+        case "DOWNRIGHT": {
+            break;
+        }
+    }
+}
 
 export default map;
