@@ -13,8 +13,8 @@ var app = {
 
     // Props
     globalConfig: {
-        map_width: 1000,
-        map_height: 500,
+        map_width: 50,
+        map_height: 50,
         zoom_step: 1.2,
         tools: (function() {
 

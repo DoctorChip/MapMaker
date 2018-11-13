@@ -1,10 +1,11 @@
 import cursor from './cursor.js'
 import context from '../context.js'
+import logger from '../logger.js'
 
 var map = {
 
     cursor,
-    points: [],
+    points: [], // XY
     config: {
         colors: [],
     },
@@ -30,10 +31,10 @@ var map = {
             app.globalConfig.map_height);
 
         // Groups points
-        var terrainGroups = calculateTerrainGroups();
+        var terrainGroups = this.calculateTerrainGroups();
 
         terrainGroups.forEach(g => {
-            // 
+            // Render
         });
 
         // debug - draw points[]
@@ -70,13 +71,15 @@ var map = {
         var size = this.getPointsArraySize();
         
         for (var x = 1; x < size.X; x++) {
+            let arr = [];
             for (var y = 1; y < size.Y; y++) {
-                this.points.push({
+                arr.push({
                     x: x * resolution,
                     y: y * resolution,
                     z: 0,
                 });
             }
+            this.points.push(arr);
         }
     },
 
@@ -98,12 +101,11 @@ var map = {
      */
     calculateTerrainGroups: function() {
 
-        const directions = ["UP", "DOWN", "LEFT", "RIGHT", "UPLEFT",
-                            "UPRIGHT", "DOWNLEFT", "DOWNRIGHT"];
-
-        var size = this.getPointsArraySize();
         let islands = []; // A group of adjacent points with the same Z value.
         var points = this.points;
+        var dimensions = this.getPointsArraySize();
+        var xMax = dimensions.X;
+        var yMax = dimensions.Y;
 
         // Process points, finding islands
         while (points.length > 0) {
@@ -115,28 +117,26 @@ var map = {
 
                 let neighbours = []; // get neighbours of initial point
                 let neighbourBuffer = []; // A temp holding array of matching points.
-                let p = points[0]; neighbours.push(p); // Take an initial point
+                let p = points[0][0]; neighbours.push(p); // Take an initial point
 
                 // Check all neighbours
-                directions.forEach(direction => {
-
-                    let p_result = findNeighbour(p, direction, points, size.X, size.Y);
-
-                    if (p_result !== null && p_result.z === p.z){
-                        neighbourBuffer.push(p_result); points.pop(p_result);
+                let p_result = findNeighbours(p, points, xMax, yMax);
+                p_result.forEach(x => {
+                    if (x !== undefined && x.z === p.z){
+                        neighbourBuffer.push(x); points.pop(x);
                     }
-                });
+                }); 
 
                 while (neighbourBuffer.length > 0){
 
                     var newBuffer = [];
 
-                    neighbourBuffer.forEach(np => {
-                        let p_result = findNeighbour(np, direction, points, size.X, size.Y);
-                        if (p_result !== null && p_result.z === np.z){
-                            newBuffer.push(p_result);
+                    let p_result = findNeighbours(p, points, xMax, yMax);
+                    p_result.forEach(x => {
+                        if (x !== undefined && x.z === p.z){
+                            neighbourBuffer.push(x); points.pop(x);
                         }
-                    });
+                    }); 
 
                     neighbours.push(neighbourBuffer);
                     neighbourBuffer.push(newBuffer);
@@ -179,11 +179,13 @@ var map = {
      *  of the area, and a radius.
      */
     getPointsWithinArea: function(x, y, r) {
-        return this.points.filter(p => {
-            let xd = Math.abs(p.x - x);
-            let yd = Math.abs(p.y - y);
-            let d = Math.sqrt(xd*xd + yd*yd);
-            return d < r;
+        return this.points.forEach(g => {
+            g.filter(p => {
+                let xd = Math.abs(p.x - x);
+                let yd = Math.abs(p.y - y);
+                let d = Math.sqrt(xd*xd + yd*yd);
+                return (d < r);
+            });
         });
     },
 
@@ -238,39 +240,46 @@ var map = {
     }
 };
 
-var findNeighbour = function(sourcePoint, direction, source, width, height) {
-
-    var pCount = source.length;
-
-    let x = source.x;
-    let y = source.y;
-
-    switch (direction){
-        case "UP": {
-            break;
+var findNeighbours = function(point, array, xMax, yMax) {
+    var result = [];
+    var index = getIndexOfItem(point, array);
+    
+    if (index[0] > 0) {
+        result.push(array[index[0] - 1][index[1]]); // Left
+        if (index[1] > 0) {
+            result.push(array[index[0] - 1][index[1] - 1]); // Top left
         }
-        case "DOWN": {
-            break;
-        }
-        case "LEFT": {
-            break;
-        }
-        case "RIGHT": {
-            break;
-        }
-        case "UPLEFT": {
-            break;
-        }
-        case "UPRIGHT": {
-            break;
-        }
-        case "DOWNLEFT": {
-            break;
-        }
-        case "DOWNRIGHT": {
-            break;
+        if (index[1] < yMax) {
+            result.push(array[index[0] - 1][index[1] + 1]); // Bottom left
         }
     }
+    if (index[0] < xMax) {
+        result.push(array[index[0] + 1][index[1]]); // Right
+        if (index[1] > 0) {
+            result.push(array[index[0] + 1][index[1] - 1]); // Top Right
+        }
+        if (index[1] < yMax) {
+            result.push(array[index[0] + 1][index[1] + 1]); // Bottom Right
+        }
+    }
+    if (index[1] > 0) {
+        result.push(array[index[0]][index[1] - 1]); // Top
+    }
+    if (index[1] < yMax) {
+        result.push(array[index[0]][index[1] + 1]); // Bottom
+
+    }
+    return result;
+}
+
+var getIndexOfItem = function(point, array) {
+    for (var i = 0; i < array.length; i++) {
+        var index = array[i].indexOf(point);
+        if (index >= 0) {
+            return [i, index];
+        }
+    }
+    return [-1, -1];
 }
 
 export default map;
